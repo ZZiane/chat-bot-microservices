@@ -17,4 +17,5 @@ public class Account {
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+    private double solde;
 }

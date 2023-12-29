@@ -1,80 +1,82 @@
 package org.mql.accountservice.configs;
 
-import java.util.List;
-import java.util.Vector;
-
-import org.mql.accountservice.entities.Account;
-import org.mql.accountservice.service.AccountService;
+import org.mql.accountservice.filters.JwtAuthFilter;
+import org.mql.accountservice.service.impl.user.config.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
+@Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
-	
-		private AccountService accountService;
 
-		private final PasswordEncoder encoder;
+	@Autowired
+	JwtAuthFilter jwtAuthFilter;
 
-		@Autowired
-		public SecurityConfig(PasswordEncoder encoder, AccountService accountService) {
-			this.encoder = encoder;
-			this.accountService = accountService;
-		}
-	 	@Bean
-	    public PasswordEncoder passwordEncoder() {
-	        return new BCryptPasswordEncoder();
-	    }
-	 	
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return new UserDetailsServiceImpl();
+	}
 
-	    @Bean
-	    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		return http.csrf((c)-> c.disable())
+				.authorizeHttpRequests((auth) ->
+						auth.requestMatchers("/accounts/**")
+								.authenticated()
+								.anyRequest()
+								.permitAll()
+				)
+				.sessionManagement((sm) ->
+						sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				)
+				.authenticationProvider(authenticationProvider())
+				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
 
-	        http
-	        .csrf((c) -> c.disable())
-	        .authorizeHttpRequests((authorize) -> {
-	            authorize.requestMatchers("/login").permitAll()
-						.anyRequest().authenticated();
-	        })
-            .logout((l) -> l.logoutUrl("/logout")
-					.logoutSuccessUrl("/v2/api-docs")
-					.invalidateHttpSession(true)
-					.deleteCookies("JSESSIONID"));
+	}
 
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-	        return http.build();
-	    }
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+		authenticationProvider.setUserDetailsService(userDetailsService());
+		authenticationProvider.setPasswordEncoder(passwordEncoder());
+		return authenticationProvider;
 
-	    @Bean
-	    public UserDetailsService userDetailsService() {
+	}
 
-			return new InMemoryUserDetailsManager(getEmployees());
-	    }
-	    
-	    
-	    private List<UserDetails> getEmployees() {
-	    	List<UserDetails> accountsAsUser = new Vector<UserDetails>();
-	    	List<Account> accounts = accountService.getAccounts();
-	    	for(Account a : accounts) {
-	    		UserDetails usr = User.builder()
-		                .username(a.getEmail())
-		                .password(encoder.encode(a.getPassword()))
-		                .roles("ADMIN")
-		                .build();
-				accountsAsUser.add(usr);
-	    	}
-	        return accountsAsUser;
-	    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+		return config.getAuthenticationManager();
+	}
 
+/*	@Bean
+	public CorsFilter corsFilter() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		//   config.addAllowedOrigin("http://localhost:3000");
+		config.addAllowedOrigin("*");
+		config.addAllowedMethod("*");
+		config.addAllowedHeader("*");
+		source.registerCorsConfiguration("/**", config);
+		return new CorsFilter(source);
+	}*/
 }

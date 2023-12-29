@@ -10,4 +10,5 @@ public interface AccountService {
     Account addAccount(Account acc);
     List<Account> getAccounts();
     Optional<Account> getAccountByEmail(String email);
+    Account consume(String email);
 }
