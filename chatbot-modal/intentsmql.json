@@ -1,0 +1,88 @@
+{
+    "intents": [{
+            "tag": "greetings",
+            "patterns": ["Salam", "salamo alaikom","slm","salam cv","cv", "hi", "salut", "cc", "wesh"],
+            "responses": ["Waailakom salam ana MQL Bot !!", "Hiii MQL bot ach khebark"],
+            "context": [""]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": ["bye", "beslama", "baslama", "good bye", "thala"],
+            "responses": ["Thala frassk", "Bye bye"],
+            "context": [""]
+        },
+        {
+            "tag": "thanks",
+            "patterns": ["Thanks", "okay","Thank you","thankyou", "chokran", "lah yhfedak", "wow", "kayn"],
+            "responses": ["Merhaba bikk !! :-)"],
+            "context": [""]
+        },
+        {
+            "tag": "trouble",
+            "patterns": [""],
+            "responses": ["Mafhmtch ach bghiti t9essad", "Kteb chi haja m9ada"],
+            "context": [""]
+        },
+        {
+            "tag": "name",
+            "patterns": ["Chekoun nta ? ","Ach smitk ?", "t'es qui ?"],
+            "responses": ["Ana chatbot dyal MQL"],
+            "context": [""]
+        },
+        {
+            "tag": "",
+            "patterns": ["debut mql", "imta bdat mql", "tarikh mql"],
+            "responses": ["MQL bdat f 2005 b nidam l9dim li smito DSE, mn be3d f 2007 wlat smitha MQL"],
+            "context": [""]
+        },
+        {
+            "tag": "fav",
+            "patterns": ["Filiere MQL", "Coordonateur", "le parrain"],
+            "responses": ["Coordonateur d filiere howa Mr CHENFOUR bdat f 2005"],
+            "context": [""]
+        },
+        {
+            "tag": "need",
+            "patterns": ["7taj integer","ndkhol","concour","Licence"],
+            "responses": ["Ila kmlti licence dyalk ma3lik ghir t9yd w nhar lconcours ji wajed bach t9dr twli Mqliste"],
+            "context": [""]
+        },
+        {
+            "tag": "programming",
+            "patterns": ["programmation","java","java ee","jee"],
+            "responses": [" Kn9raw java w bzaf dl7wayj ma3aha li kikhaliwna wa3rin f l volet technologique.", " Emmm kn t3lmo bzaf d les technos f MQL w7ta soft skills."],
+            "context": [""]
+        },
+        {
+            "tag": "who",
+            "patterns": ["Kidayr"],
+            "responses": ["Cv ana dima bekehr :)"],
+            "context": [""]
+        },
+        {
+            "tag": "bot",
+            "patterns": ["nta bot","bot","chkon nta"],
+            "responses": ["Ah ana bot d mql."],
+            "context": [""]
+        },
+        {
+            "tag": "events",
+            "patterns": ["Multinational","cap","capgemini","atos","CGI","deloite","SQLI","stage pfe","CDI"],
+            "responses": ["Les Mqlistes ki9dro itintegraw facilement f les entreprises makaynch concurrents dyalhom","Taux d'insertion f mql 99%", "Aghlabia d MQListe kisgniw CDI wra stage dyalhom"],
+            "context": [""]
+        },
+        {
+            "tag": "emplacement",
+            "patterns": ["fin","blasst mql","position","localisation"],
+            "responses": ["MQL kayna f fes f la fac dhar el mahraz"],
+            "context": [""]
+        },
+        {
+            "tag": "dev",
+            "patterns": ["Bach mdevelopink"],
+            "responses": ["Ana model d deep learning devlopawni b python w ana minteger m3a bzaf d services"],
+            "context": [""]
+        }
+       
+    ]
+}
