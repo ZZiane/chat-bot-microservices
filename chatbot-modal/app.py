@@ -41,19 +41,8 @@ def chatbot_response():
            "error" : "you can't use it"
        }))
     msg = request.form["msg"]
-    if msg.startswith('my name is'):
-        name = msg[11:]
-        ints = predict_class(msg, model)
-        res1 = getResponse(ints, intents)
-        res =res1.replace("{n}",name)
-    elif msg.startswith('hi my name is'):
-        name = msg[14:]
-        ints = predict_class(msg, model)
-        res1 = getResponse(ints, intents)
-        res =res1.replace("{n}",name)
-    else:
-        ints = predict_class(msg, model)
-        res = getResponse(ints, intents)
+    ints = predict_class(msg, model)
+    res = getResponse(ints, intents)
     return dict(output=res)
 
 
